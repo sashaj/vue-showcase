@@ -12,8 +12,8 @@ const loadingRef = ref(false);
 const authStore = useAuthStore();
 const formValue = ref({
   user: {
-    login: "",
-    password: "",
+    login: "atuny0",
+    password: "9uQFF1Lh",
   },
 });
 
@@ -31,6 +31,20 @@ const rules = ref({
     },
   },
 });
+
+function getData() {
+  fetch("https://dummyjson.com/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: formRef.value.model.user.login,
+      password: formRef.value.model.user.password,
+      // expiresInMins: 60, // optional
+    }),
+  })
+    .then((res) => res.json())
+    .then(console.log);
+}
 
 function handleValidateClick(e) {
   e.preventDefault();
@@ -96,6 +110,18 @@ function handleValidateClick(e) {
         :loading="loading"
         icon-placement="left"
         @click="handleValidateClick"
+        type="primary"
+        class="bg-green-100 border-green-200 hover:border-green-600 p-5"
+        block
+        secondary
+        strong
+      >
+        Авторизоваться
+      </n-button>
+      <n-button
+        :loading="loading"
+        icon-placement="left"
+        @click="getData"
         type="primary"
         class="bg-green-100 border-green-200 hover:border-green-600 p-5"
         block

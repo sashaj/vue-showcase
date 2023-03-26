@@ -14,15 +14,16 @@ export const useAuthStore = defineStore("authStore", {
         password,
       };
       await axiosClient({
-        url: "/map_change/auth/token/login/",
+        url: "/auth/login",
         method: "POST",
         data: data,
       })
         .then((user) => {
           const userObject = {
-            name: null,
-            token: user.data.auth_token,
+            name: user.data.username,
+            token: user.data.token,
           };
+          console.log(user);
           localStorage.setItem("currentUser", JSON.stringify(userObject));
           this.currentUserAuthData = JSON.stringify(userObject);
           return user;

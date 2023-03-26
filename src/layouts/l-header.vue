@@ -20,7 +20,7 @@ export default defineComponent({
     const PROJECT_NAME = import.meta.env.VITE_PROJECT_NAME;
     const router = useRouter();
     const authStore = useAuthStore();
-
+    const currentUser = null;
     return {
       PROJECT_NAME,
       authStore,
@@ -41,6 +41,9 @@ export default defineComponent({
       },
     };
   },
+  mounted() {
+    this.currentUser = localStorage.getItem("currentUser");
+  },
 });
 </script>
 
@@ -50,7 +53,7 @@ export default defineComponent({
       <div class="px-4 text-white">Logo</div>
       <div class="px-4">
         <n-dropdown :options="options" class="w-48" @select="handleSelect">
-          <n-button class="text-white">Иванов Иван Иванович</n-button>
+          <n-button class="text-white">{{ currentUser.name }}</n-button>
         </n-dropdown>
       </div>
     </div>

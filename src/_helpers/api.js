@@ -13,11 +13,11 @@ export const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
   function (config) {
     const authStore = useAuthStore();
-    config.headers.Accept = "application/json";
-    const currentUser = authStore.currentUserAuthData || {};
-    config.headers.Authorization = currentUser.token
-      ? `Token ${currentUser.token}`
-      : {};
+    config.headers.Accept = "*/*";
+    // const currentUser = authStore.currentUserAuthData || {};
+    // config.headers.Authorization = currentUser.token
+    //   ? `Token ${currentUser.token}`
+    //   : {};
 
     if (!authStore.API_URL) {
       authStore.getApiURL();
