@@ -35,7 +35,7 @@ const rules = ref({
 function getData() {
   fetch("https://dummyjson.com/auth/login", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain" },
     body: JSON.stringify({
       username: formRef.value.model.user.login,
       password: formRef.value.model.user.password,
@@ -128,7 +128,7 @@ function handleValidateClick(e) {
         secondary
         strong
       >
-        Авторизоваться
+        Fetch
       </n-button>
     </div>
   </div>
