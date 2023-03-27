@@ -3,7 +3,7 @@ import { NForm, NFormItemRow, NInput, NButton } from "naive-ui";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
-import { useValidateStore } from "@/stores/authStore";
+import { useValidateStore } from "@/stores/validateStore";
 const PROJECT_NAME = import.meta.env.VITE_PROJECT_NAME;
 
 const formRef = ref(null);
