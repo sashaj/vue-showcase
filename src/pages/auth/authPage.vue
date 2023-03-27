@@ -3,6 +3,7 @@ import { NForm, NFormItemRow, NInput, NButton } from "naive-ui";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
+import { useValidateStore } from "@/stores/authStore";
 const PROJECT_NAME = import.meta.env.VITE_PROJECT_NAME;
 
 const formRef = ref(null);
@@ -10,6 +11,7 @@ const route = useRoute();
 const router = useRouter();
 const loadingRef = ref(false);
 const authStore = useAuthStore();
+const validateStore = useValidateStore();
 const formValue = ref({
   user: {
     login: "atuny0",

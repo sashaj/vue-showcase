@@ -42,8 +42,9 @@ export default defineComponent({
     };
   },
   mounted() {
-    this.currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    console.log(this.currentUser);
+    if (!this.currentUser) {
+      this.currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    }
   },
 });
 </script>
@@ -54,7 +55,7 @@ export default defineComponent({
       <div class="px-4 text-white">Logo</div>
       <div class="px-4">
         <n-dropdown :options="options" class="w-48" @select="handleSelect">
-          <n-button class="text-white">{{ currentUser.name }}</n-button>
+          <n-button class="text-white"> пользователь </n-button>
           <!-- <n-button class="text-white">пользователь</n-button> -->
         </n-dropdown>
       </div>

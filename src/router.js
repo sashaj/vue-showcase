@@ -12,12 +12,20 @@ import NotFound from "@/pages/404/404Page.vue";
 import UsingStoreExample from "@/pages/pinia/piniaPage.vue";
 import { useAuthStore } from "@/stores/authStore";
 
+import ProductItemPage from "@/pages/main/productItemPage.vue";
+
 const routes = [
   { name: "main", path: "/", component: Main, meta: { authorize: [] } },
   { name: "about", path: "/about", component: About, meta: { authorize: [] } },
   { name: "form", path: "/form", component: Form, meta: { authorize: [] } },
   { name: "auth", path: "/auth", component: Auth },
   { name: "table", path: "/table", component: Table, meta: { authorize: [] } },
+  {
+    name: "productItem",
+    path: "/product/:id",
+    component: ProductItemPage,
+    meta: { guest: true },
+  },
   {
     name: "pinia",
     path: "/pinia",
