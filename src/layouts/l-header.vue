@@ -52,7 +52,9 @@ export default defineComponent({
 <template>
   <header class="flex justify-center bg-sky-700 h-12">
     <div class="flex justify-between items-center w-full">
-      <div class="px-4 text-white">Logo</div>
+      <router-link :to="{ name: 'main' }">
+        <div class="px-4 text-white">Logo</div>
+      </router-link>
       <div class="px-4">
         <n-dropdown :options="options" class="w-48" @select="handleSelect">
           <n-button class="text-white"> пользователь </n-button>

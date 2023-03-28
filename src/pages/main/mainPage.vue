@@ -3,7 +3,17 @@ import { ref } from "vue";
 import { axiosClient } from "@/_helpers/api";
 import { onMounted } from "vue";
 import { useProductStore } from "@/stores/productStore";
-import { NCard, NInput, NButton, NRate, NSpace } from "naive-ui";
+import {
+  NCard,
+  NInput,
+  NButton,
+  NRate,
+  NSpace,
+  NCheckbox,
+  NCheckboxGroup,
+  NGi,
+  NGrid,
+} from "naive-ui";
 import { useRouter, useRoute } from "vue-router";
 
 const productStore = useProductStore();
@@ -11,10 +21,12 @@ const router = useRouter();
 const route = useRoute();
 const productData = ref({});
 const virginProductData = ref({});
-const searchConfig = ref({ filter: null, search: "", sort: null });
+const searchModel = ref({ filter: null, search: "", sort: null });
+const searchInitValues = ref({ filter: [], sort: ["По рейтингу", "По цене"] });
 const categories = ref({});
+
+//-------------------------------------------------------------------
 //Logic methods
-//___________________________________________________________________________
 
 function getCurrentUrl() {
   // console.log("r", router.currentRoute.value.name);
@@ -22,18 +34,42 @@ function getCurrentUrl() {
 
 function search() {
   productData.value = virginProductData.value;
-  productData.value = productData.value.filter((item) => {
-    if (searchConfig.value.search && item.title) {
-      return item.title
-        .toLowerCase()
-        .includes(searchConfig.value.search.toLowerCase());
-    }
-    return item;
-  });
+  if (searchModel.value.search) {
+    productData.value = productData.value.filter((item) => {
+      if (item.title) {
+        return item.title
+          .toLowerCase()
+          .includes(searchModel.value.search.toLowerCase());
+      }
+    });
+  }
 }
 
+function filter(value) {
+  productData.value = virginProductData.value;
+  if (value.length > 0) {
+    productData.value = productData.value.filter((item) => {
+      return item.category === value[0];
+    });
+  }
+}
+
+function sort(value) {
+  productData.value = virginProductData.value;
+  if (value.length > 0) {
+    productData.value = productData.value.sort((a, b) => {
+      if (value[0] === "По цене") {
+        return a.price - b.price;
+      } else if (value[0] === "По рейтингу") {
+        return a.rating - b.rating;
+      }
+    });
+  }
+}
+
+//-------------------------------------------------------------------
 //Api methods
-//___________________________________________________________________________
+
 async function getProductsAll() {
   await axiosClient({
     url: "/products",
@@ -47,8 +83,8 @@ async function getCategoriesAll() {
   await axiosClient({
     url: "/products/categories",
   }).then((res) => {
-    categories.value = res.data;
-    console.log(categories.value);
+    console.log(searchInitValues.value);
+    searchInitValues.value.filter = res.data;
   });
 }
 
@@ -76,19 +112,21 @@ async function postData() {
   });
 }
 
+//-------------------------------------------------------------------
 //Lifecycle hooks
-//___________________________________________________________________________
+
 onMounted(() => {
   // getCurrentUrl();
   getProductsAll();
   getCategoriesAll();
 });
+//-------------------------------------------------------------------
 </script>
 
 <template>
   <div class="flex w-full search mb-10">
     <n-input
-      v-model:value="searchConfig.search"
+      v-model:value="searchModel.search"
       type="text"
       placeholder="Поиск по названию"
       size="large"
@@ -96,6 +134,38 @@ onMounted(() => {
     />
     <n-button type="primary" size="large" @click="search()">Найти</n-button>
   </div>
+
+  <h5>Фильтрация</h5>
+  <n-checkbox-group
+    @update:value="filter"
+    v-model:value="searchModel.filter"
+    class="mb-10"
+  >
+    <n-space>
+      <n-grid :y-gap="8" :cols="5">
+        <n-gi v-for="item in searchInitValues.filter">
+          <n-checkbox :value="item">{{ item }}</n-checkbox>
+        </n-gi>
+      </n-grid>
+    </n-space>
+  </n-checkbox-group>
+
+  <h5>Сортировка</h5>
+  <n-checkbox-group
+    @update:value="sort"
+    v-model:value="searchModel.sort"
+    class="mb-10"
+    :max="1"
+  >
+    <n-space>
+      <n-grid :y-gap="8" :cols="5">
+        <n-gi v-for="item in searchInitValues.sort">
+          <n-checkbox :value="item">{{ item }}</n-checkbox>
+        </n-gi>
+      </n-grid>
+    </n-space>
+  </n-checkbox-group>
+
   <div class="product">
     <div class="product__wrapper">
       <router-link
@@ -132,8 +202,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: 24px;
-  padding-right: 24px;
+  padding: 10px;
 }
 .product-list__image img {
   width: 100%;
