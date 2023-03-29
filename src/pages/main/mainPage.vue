@@ -19,21 +19,17 @@ import { useRouter, useRoute } from "vue-router";
 const productStore = useProductStore();
 const router = useRouter();
 const route = useRoute();
-const productData = ref({});
-const virginProductData = ref({});
-const searchModel = ref({ filter: null, search: "", sort: null });
+const productData = ref(null);
+const virginProductData = ref(null);
+const searchModel = ref({ filter: null, search: null, sort: null });
 const searchInitValues = ref({ filter: [], sort: ["По рейтингу", "По цене"] });
 const categories = ref({});
 
 //-------------------------------------------------------------------
 //Logic methods
 
-function getCurrentUrl() {
-  // console.log("r", router.currentRoute.value.name);
-}
-
 function search() {
-  productData.value = virginProductData.value;
+  productData.value = [...virginProductData.value];
   if (searchModel.value.search) {
     productData.value = productData.value.filter((item) => {
       if (item.title) {
@@ -46,7 +42,7 @@ function search() {
 }
 
 function filter(value) {
-  productData.value = virginProductData.value;
+  productData.value = [...virginProductData.value];
   if (value.length > 0) {
     productData.value = productData.value.filter((item) => {
       return item.category === value[0];
@@ -55,7 +51,7 @@ function filter(value) {
 }
 
 function sort(value) {
-  productData.value = virginProductData.value;
+  productData.value = [...virginProductData.value];
   if (value.length > 0) {
     productData.value = productData.value.sort((a, b) => {
       if (value[0] === "По цене") {
@@ -74,9 +70,8 @@ async function getProductsAll() {
   await axiosClient({
     url: "/products",
   }).then((res) => {
-    productData.value = res.data.products;
-    virginProductData.value = res.data.products;
-    console.log(productData);
+    productData.value = [...res.data.products];
+    virginProductData.value = [...res.data.products];
   });
 }
 async function getCategoriesAll() {
@@ -85,16 +80,6 @@ async function getCategoriesAll() {
   }).then((res) => {
     console.log(searchInitValues.value);
     searchInitValues.value.filter = res.data;
-  });
-}
-
-async function getData() {
-  await axiosClient({
-    url: "/products",
-  }).then((res) => {
-    productData.value = res.data.products;
-    virginProductData.value = res.data.products;
-    console.log(productData);
   });
 }
 
@@ -124,6 +109,8 @@ onMounted(() => {
 </script>
 
 <template>
+  <h5>Поиск</h5>
+
   <div class="flex w-full search mb-10">
     <n-input
       v-model:value="searchModel.search"
@@ -166,7 +153,10 @@ onMounted(() => {
     </n-space>
   </n-checkbox-group>
 
-  <div class="product">
+  <div class="product" v-if="productData">
+    <p v-if="productData.length === 0">
+      Ничего не найдено. Попробуйте поменять параметры поиска
+    </p>
     <div class="product__wrapper">
       <router-link
         v-for="item in productData"
@@ -176,12 +166,17 @@ onMounted(() => {
         <n-card hoverable>
           <template #cover>
             <div class="product-list__image">
-              <img :src="item.thumbnail" />
+              <img
+                :src="item.thumbnail"
+                loading="lazy"
+                width="100"
+                height="100"
+              />
             </div>
           </template>
           <div class="flex justify-between">
             <p>{{ item.title }}</p>
-            <p>${{ item.price }}</p>
+            <p class="whitespace-nowrap text-blue-600">${{ item.price }}</p>
           </div>
           <n-rate size="small" readonly :value="item.rating" allow-half />
           <p class="text-slate-400">{{ item.description }}</p>

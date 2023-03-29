@@ -55,9 +55,9 @@ export default defineComponent({
       <router-link :to="{ name: 'main' }">
         <div class="px-4 text-white">Logo</div>
       </router-link>
-      <div class="px-4">
+      <div class="px-4" v-if="currentUser">
         <n-dropdown :options="options" class="w-48" @select="handleSelect">
-          <n-button class="text-white"> пользователь </n-button>
+          <n-button class="text-white"> {{ this.currentUser.name }} </n-button>
           <!-- <n-button class="text-white">пользователь</n-button> -->
         </n-dropdown>
       </div>
