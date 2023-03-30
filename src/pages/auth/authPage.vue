@@ -120,18 +120,6 @@ function handleValidateClick(e) {
       >
         Авторизоваться
       </n-button>
-      <n-button
-        :loading="loading"
-        icon-placement="left"
-        @click="getData"
-        type="primary"
-        class="bg-green-100 border-green-200 hover:border-green-600 p-5"
-        block
-        secondary
-        strong
-      >
-        Fetch
-      </n-button>
     </div>
   </div>
 </template>

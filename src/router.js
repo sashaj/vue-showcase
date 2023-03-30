@@ -15,7 +15,7 @@ import { useAuthStore } from "@/stores/authStore";
 import ProductItemPage from "@/pages/main/productItemPage.vue";
 
 const routes = [
-  { name: "main", path: "/", component: Main, meta: { authorize: [] } },
+  { name: "main", path: "/", component: Main, meta: { guest: true } },
   { name: "about", path: "/about", component: About, meta: { authorize: [] } },
   { name: "form", path: "/form", component: Form, meta: { authorize: [] } },
   { name: "auth", path: "/auth", component: Auth },
