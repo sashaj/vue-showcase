@@ -1,10 +1,15 @@
 <script>
-import { defineComponent, h, ref, computed } from "vue";
+import { defineComponent, h, ref, onMounted } from "vue";
 import { useRouter, RouterLink } from "vue-router";
 import { NIcon, NDropdown, NButton, NBadge, NAvatar } from "naive-ui";
-import { LogOutOutline, BasketOutline } from "@vicons/ionicons5";
+import {
+  LogOutOutline,
+  BasketOutline,
+  LogoAppleAppstore,
+} from "@vicons/ionicons5";
 
 import { useAuthStore } from "@/stores/authStore";
+import { useProductStore } from "@/stores/productStore";
 
 const renderIcon = (icon) => {
   return () => {
@@ -20,10 +25,15 @@ export default defineComponent({
     const PROJECT_NAME = import.meta.env.VITE_PROJECT_NAME;
     const router = useRouter();
     const authStore = useAuthStore();
+    const productStore = useProductStore();
     const badge = ref({ value: 0 });
+    onMounted(() => {
+      productStore.getBasketFromLocalStorage();
+    });
     return {
       PROJECT_NAME,
       authStore,
+      productStore,
       router,
       badge,
       options: [
@@ -73,7 +83,7 @@ export default defineComponent({
         v-if="router.currentRoute.value.path !== '/auth'"
         :to="{ name: 'basket' }"
       >
-        <n-badge :value="badge.value">
+        <n-badge :value="productStore.basketData.count">
           <n-icon :size="25" color="#ffffff">
             <basket-outline />
           </n-icon>

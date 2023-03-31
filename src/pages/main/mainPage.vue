@@ -17,13 +17,11 @@ import {
 import { useRouter, useRoute } from "vue-router";
 
 const productStore = useProductStore();
-const router = useRouter();
-const route = useRoute();
+
 const productData = ref([]);
 const virginProductData = ref(null);
 const searchModel = ref({ filter: null, search: null, sort: null });
 const searchInitValues = ref({ filter: [], sort: ["По рейтингу", "По цене"] });
-const categories = ref({});
 
 //-------------------------------------------------------------------
 //Logic methods
@@ -61,6 +59,10 @@ function sort(value) {
       }
     });
   }
+}
+
+function addToBasket(e) {
+  console.log(e);
 }
 
 //-------------------------------------------------------------------
@@ -146,7 +148,7 @@ onMounted(() => {
   >
     <n-space>
       <n-grid :y-gap="8" :cols="5">
-        <n-gi v-for="item in searchInitValues.sort">
+        <n-gi v-for="item in searchInitValues.sort" :key="item.id">
           <n-checkbox :value="item">{{ item }}</n-checkbox>
         </n-gi>
       </n-grid>
@@ -158,30 +160,31 @@ onMounted(() => {
       Ничего не найдено. Попробуйте поменять параметры поиска
     </p>
     <div class="product__wrapper">
-      <router-link
-        v-for="item in productData"
-        class="product__item"
-        :to="{ name: 'productItem', params: { id: item.id } }"
-      >
-        <n-card hoverable>
-          <template #cover>
-            <div class="product-list__image">
-              <img
-                :src="item.thumbnail"
-                loading="lazy"
-                width="100"
-                height="100"
-              />
-            </div>
-          </template>
+      <n-card hoverable v-for="item in productData">
+        <router-link
+          class="product__item"
+          :to="{ name: 'productItem', params: { id: item.id } }"
+        >
+          <div class="product-list__image">
+            <img
+              :src="item.thumbnail"
+              loading="lazy"
+              width="100"
+              height="100"
+            />
+          </div>
+
           <div class="flex justify-between">
             <p>{{ item.title }}</p>
             <p class="whitespace-nowrap text-blue-600">${{ item.price }}</p>
           </div>
           <n-rate size="small" readonly :value="item.rating" allow-half />
           <p class="text-slate-400">{{ item.description }}</p>
-        </n-card>
-      </router-link>
+        </router-link>
+        <n-button @click="productStore.addToBasket(item)" class="mt-auto"
+          >Добавить в корзину
+        </n-button>
+      </n-card>
     </div>
   </div>
 </template>
