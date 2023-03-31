@@ -9,6 +9,7 @@ import Form from "@/pages/form/formPage.vue";
 import Auth from "@/pages/auth/authPage.vue";
 import Table from "@/pages/table/tablePage.vue";
 import NotFound from "@/pages/404/404Page.vue";
+import Basket from "@/pages/basket/basketPage.vue";
 import UsingStoreExample from "@/pages/pinia/piniaPage.vue";
 import { useAuthStore } from "@/stores/authStore";
 
@@ -24,6 +25,12 @@ const routes = [
     name: "productItem",
     path: "/product/:id",
     component: ProductItemPage,
+    meta: { guest: true },
+  },
+  {
+    name: "basket",
+    path: "/basket",
+    component: Basket,
     meta: { guest: true },
   },
   {

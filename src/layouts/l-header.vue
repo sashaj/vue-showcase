@@ -1,8 +1,8 @@
 <script>
 import { defineComponent, h, ref, computed } from "vue";
 import { useRouter, RouterLink } from "vue-router";
-import { NIcon, NDropdown, NButton } from "naive-ui";
-import { LogOutOutline } from "@vicons/ionicons5";
+import { NIcon, NDropdown, NButton, NBadge, NAvatar } from "naive-ui";
+import { LogOutOutline, BasketOutline } from "@vicons/ionicons5";
 
 import { useAuthStore } from "@/stores/authStore";
 
@@ -15,16 +15,17 @@ const renderIcon = (icon) => {
 };
 
 export default defineComponent({
-  components: { NDropdown, NButton },
+  components: { NDropdown, NButton, NBadge, NAvatar, NIcon, BasketOutline },
   setup() {
     const PROJECT_NAME = import.meta.env.VITE_PROJECT_NAME;
     const router = useRouter();
     const authStore = useAuthStore();
-
+    const badge = ref({ value: 0 });
     return {
       PROJECT_NAME,
       authStore,
       router,
+      badge,
       options: [
         {
           label: "Выйти",
@@ -49,7 +50,7 @@ export default defineComponent({
   <header class="flex justify-center bg-sky-700 h-12">
     <div class="flex justify-between items-center w-full p-3">
       <router-link :to="{ name: 'main' }">
-        <div class="px-4 text-white">Logo</div>
+        <div class="px-4 text-white">Logo/Home</div>
       </router-link>
       <div class="px-4" v-if="authStore.currentUserAuthData">
         <n-dropdown :options="options" class="w-48" @select="handleSelect">
@@ -66,6 +67,17 @@ export default defineComponent({
         :to="{ name: 'auth' }"
       >
         <n-button class="text-white">Войти</n-button>
+      </router-link>
+
+      <router-link
+        v-if="router.currentRoute.value.path !== '/auth'"
+        :to="{ name: 'basket' }"
+      >
+        <n-badge :value="badge.value">
+          <n-icon :size="25" color="#ffffff">
+            <basket-outline />
+          </n-icon>
+        </n-badge>
       </router-link>
     </div>
   </header>
