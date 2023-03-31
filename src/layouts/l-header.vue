@@ -20,17 +20,11 @@ export default defineComponent({
     const PROJECT_NAME = import.meta.env.VITE_PROJECT_NAME;
     const router = useRouter();
     const authStore = useAuthStore();
-    const currentUser = ref(null);
-    const loggedIn = computed(() => {
-      return currentUser;
-    });
 
     return {
       PROJECT_NAME,
       authStore,
-      currentUser,
       router,
-      loggedIn,
       options: [
         {
           label: "Выйти",
@@ -42,17 +36,11 @@ export default defineComponent({
         if (key === "logout") {
           window.$message.info("Вы успешно вышли!");
           authStore.logout();
-          currentUser.value = null;
-          router.push("/auth");
+          authStore.currentUserAuthData = null;
+          router.push("/");
         }
       },
     };
-  },
-  mounted() {
-    if (!this.currentUser) {
-      this.currentUser = JSON.parse(localStorage.getItem("currentUser"));
-      console.log(this.router);
-    }
   },
 });
 </script>
@@ -63,13 +51,18 @@ export default defineComponent({
       <router-link :to="{ name: 'main' }">
         <div class="px-4 text-white">Logo</div>
       </router-link>
-      <div class="px-4" v-if="loggedIn.value">
+      <div class="px-4" v-if="authStore.currentUserAuthData">
         <n-dropdown :options="options" class="w-48" @select="handleSelect">
-          <n-button class="text-white"> {{ loggedIn.value.name }} </n-button>
+          <n-button class="text-white">
+            {{ authStore.currentUserAuthData.name }}
+          </n-button>
         </n-dropdown>
       </div>
       <router-link
-        v-if="!loggedIn && this.router.currentRoute._value.path !== '/auth'"
+        v-if="
+          !authStore.currentUserAuthData &&
+          router.currentRoute.value.path !== '/auth'
+        "
         :to="{ name: 'auth' }"
       >
         <n-button class="text-white">Войти</n-button>

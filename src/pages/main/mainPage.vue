@@ -19,7 +19,7 @@ import { useRouter, useRoute } from "vue-router";
 const productStore = useProductStore();
 const router = useRouter();
 const route = useRoute();
-const productData = ref(null);
+const productData = ref([]);
 const virginProductData = ref(null);
 const searchModel = ref({ filter: null, search: null, sort: null });
 const searchInitValues = ref({ filter: [], sort: ["По рейтингу", "По цене"] });
@@ -108,7 +108,7 @@ onMounted(() => {
 //-------------------------------------------------------------------
 </script>
 
-<template>
+<template v-if="productData">
   <h5>Поиск</h5>
 
   <div class="flex w-full search mb-10">
@@ -153,7 +153,7 @@ onMounted(() => {
     </n-space>
   </n-checkbox-group>
 
-  <div class="product" v-if="productData">
+  <div class="product">
     <p v-if="productData.length === 0">
       Ничего не найдено. Попробуйте поменять параметры поиска
     </p>
