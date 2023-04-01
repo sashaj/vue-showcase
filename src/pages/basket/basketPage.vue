@@ -9,52 +9,33 @@ import { useProductStore } from "@/stores/productStore";
 const route = useRoute();
 const router = useRouter();
 const productStore = useProductStore();
-const rowProps = function (row) {
-  return {
-    style: "cursor: pointer;",
-    onClick: () => {
-      console.log(row.id);
-      // router.push(`/applications/my/${row.id}`);
-    },
-  };
-};
-const dataTableInstRef = ref(null);
+
+const dataTableRef = ref(null);
 const columns = ref([
   {
-    title: "№ заявки",
-    key: "id",
-  },
-  {
-    title: "Название проекта",
+    title: "Название",
     key: "title",
   },
   {
-    title: "Конкурс",
-    key: "contest.description",
+    title: "Количество",
+    key: "quantity",
+  },
+  {
+    title: "Цена $",
+    key: "price",
+  },
+  {
+    title: "Рейтинг",
+    key: "rating",
   },
 
   {
-    title: "Статус",
-    key: "status",
-  },
-  {
-    title: "Дата подписания заявки",
-    key: "creationDate",
-  },
-
-  {
-    title: "Дата подачи заявления",
-    key: "dateOfApplicationSubmission",
+    title: "Описание",
+    key: "description",
   },
 ]);
 const data = ref([]);
 const filterColumn = ref();
-
-// Vue hooks
-//-------------------------------------------------------
-onMounted(() => {
-  // getAllApplications();
-});
 
 // API methods
 //-------------------------------------------------------
@@ -77,17 +58,17 @@ async function getAllApplications() {
     <h4>Товары в корзине</h4>
   </div>
   <n-space vertical :size="12">
-    <!-- <n-space>
-      <n-button @click="sortName">Sort By Name (Ascend)</n-button>
-      <n-button @click="filterAddress">Filter Address (London)</n-button>
-      <n-button @click="clearFilters">Clear Filters</n-button>
-      <n-button @click="clearSorter">Clear Sorter</n-button>
-    </n-space> -->
     <n-data-table
-      ref="dataTableInst"
+      ref="dataTableRef"
       :columns="columns"
-      :data="productStore.basketData"
+      :data="productStore.basketData.products"
       :row-props="rowProps"
     />
+    <router-link
+      v-if="router.currentRoute.value.path !== '/auth'"
+      :to="{ name: 'basket' }"
+    >
+      <n-button type="primary" size="large">Оформить</n-button>
+    </router-link>
   </n-space>
 </template>

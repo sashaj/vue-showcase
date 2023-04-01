@@ -72,8 +72,12 @@ async function getProductsAll() {
   await axiosClient({
     url: "/products",
   }).then((res) => {
+    for (let i = 0; i < res.data.products.length; i++) {
+      res.data.products[i].quantity = 1;
+    }
     productData.value = [...res.data.products];
     virginProductData.value = [...res.data.products];
+    console.log(productData.value);
   });
 }
 async function getCategoriesAll() {
@@ -160,9 +164,9 @@ onMounted(() => {
       Ничего не найдено. Попробуйте поменять параметры поиска
     </p>
     <div class="product__wrapper">
-      <n-card hoverable v-for="item in productData">
+      <n-card hoverable v-for="item in productData" class="product__item">
         <router-link
-          class="product__item"
+          class="pb-10"
           :to="{ name: 'productItem', params: { id: item.id } }"
         >
           <div class="product-list__image">
@@ -181,7 +185,9 @@ onMounted(() => {
           <n-rate size="small" readonly :value="item.rating" allow-half />
           <p class="text-slate-400">{{ item.description }}</p>
         </router-link>
-        <n-button @click="productStore.addToBasket(item)" class="mt-auto"
+        <n-button
+          @click="productStore.addToBasket(item)"
+          class="product-add-to-basket"
           >Добавить в корзину
         </n-button>
       </n-card>
@@ -192,9 +198,20 @@ onMounted(() => {
 <style scoped>
 .product__item {
   width: 100%;
-  margin-right: 30px;
-  margin-bottom: 30px;
+  height: 475px;
+  height: 100%;
 }
+
+.product-add-to-basket {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80%;
+}
+
 .product-list__image {
   height: 200px;
   display: flex;
@@ -219,7 +236,9 @@ onMounted(() => {
   max-width: 1400px;
   width: 100%;
   grid-template-columns: repeat(4, 22% [col-start]);
+  grid-template-rows: 475px;
   column-gap: 30px;
+  row-gap: 30px;
   justify-content: space-between;
 }
 </style>

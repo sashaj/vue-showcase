@@ -83,7 +83,7 @@ export default defineComponent({
         v-if="router.currentRoute.value.path !== '/auth'"
         :to="{ name: 'basket' }"
       >
-        <n-badge :value="productStore.basketData.count">
+        <n-badge :value="productStore.basketData.labelCount">
           <n-icon :size="25" color="#ffffff">
             <basket-outline />
           </n-icon>

@@ -5,16 +5,21 @@ export const useProductStore = defineStore("ProductStore", {
     productData: [],
     virginProductData: [],
     basketData: {
-      products: null,
-      count: 0,
+      products: [],
+      labelCount: 0,
     },
   }),
   getters: {},
   actions: {
     addToBasket(item) {
-      this.basketData.products.push(item);
-      this.basketData.count++;
-      console.log(this.basketData);
+      let found = this.basketData.products.findIndex((el) => el.id === item.id);
+      if (found >= 0) {
+        this.basketData.products[found].quantity++;
+      } else {
+        this.basketData.products.push(item);
+      }
+      this.basketData.labelCount++;
+
       this.saveBasketToLocalStorage();
     },
     saveBasketToLocalStorage() {
