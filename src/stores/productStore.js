@@ -19,7 +19,7 @@ export const useProductStore = defineStore("ProductStore", {
         this.basketData.products.push(item);
       }
       this.basketData.labelCount++;
-
+      window.$message.success(`${item.title} добавлен!`);
       this.saveBasketToLocalStorage();
     },
     saveBasketToLocalStorage() {

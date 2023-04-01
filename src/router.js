@@ -1,26 +1,20 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
 
 // import { Role } from '@/_helpers';
 
 // import pages
 import Main from "@/pages/main/mainPage.vue";
-import About from "@/pages/about/aboutPage.vue";
-import Form from "@/pages/form/formPage.vue";
 import Auth from "@/pages/auth/authPage.vue";
-import Table from "@/pages/table/tablePage.vue";
 import NotFound from "@/pages/404/404Page.vue";
 import Basket from "@/pages/basket/basketPage.vue";
-import UsingStoreExample from "@/pages/pinia/piniaPage.vue";
-import { useAuthStore } from "@/stores/authStore";
-
 import ProductItemPage from "@/pages/main/productItemPage.vue";
 
 const routes = [
   { name: "main", path: "/", component: Main, meta: { guest: true } },
-  { name: "about", path: "/about", component: About, meta: { authorize: [] } },
-  { name: "form", path: "/form", component: Form, meta: { authorize: [] } },
+
   { name: "auth", path: "/auth", component: Auth },
-  { name: "table", path: "/table", component: Table, meta: { authorize: [] } },
+
   {
     name: "productItem",
     path: "/product/:id",
@@ -33,12 +27,7 @@ const routes = [
     component: Basket,
     meta: { guest: true },
   },
-  {
-    name: "pinia",
-    path: "/pinia",
-    component: UsingStoreExample,
-    meta: { authorize: [] },
-  },
+
   { path: "/:pathMatch(.*)*", component: NotFound },
 ];
 

@@ -2,9 +2,7 @@ import { defineStore } from "pinia";
 
 export const useValidateStore = defineStore("validateStore", {
   //state is like data()
-  state: () => ({
-    password1: null,
-  }),
+  state: () => ({}),
   //getters are like computed:
   getters: {},
   //actions are like methods

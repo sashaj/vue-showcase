@@ -24,7 +24,7 @@ const searchModel = ref({ filter: null, search: null, sort: null });
 const searchInitValues = ref({ filter: [], sort: ["По рейтингу", "По цене"] });
 
 //-------------------------------------------------------------------
-//Logic methods
+//Logic functions
 
 function search() {
   productData.value = [...virginProductData.value];
@@ -61,10 +61,6 @@ function sort(value) {
   }
 }
 
-function addToBasket(e) {
-  console.log(e);
-}
-
 //-------------------------------------------------------------------
 //Api methods
 
@@ -77,29 +73,13 @@ async function getProductsAll() {
     }
     productData.value = [...res.data.products];
     virginProductData.value = [...res.data.products];
-    console.log(productData.value);
   });
 }
 async function getCategoriesAll() {
   await axiosClient({
     url: "/products/categories",
   }).then((res) => {
-    console.log(searchInitValues.value);
     searchInitValues.value.filter = res.data;
-  });
-}
-
-async function postData() {
-  var data = {
-    id: 1,
-    name: "test",
-  };
-  await axiosClient({
-    url: "some/test",
-    method: "POST",
-    data: data,
-  }).then((res) => {
-    console.log(res);
   });
 }
 
@@ -107,7 +87,6 @@ async function postData() {
 //Lifecycle hooks
 
 onMounted(() => {
-  // getCurrentUrl();
   getProductsAll();
   getCategoriesAll();
 });

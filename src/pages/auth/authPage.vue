@@ -34,20 +34,6 @@ const rules = ref({
   },
 });
 
-function getData() {
-  fetch("https://dummyjson.com/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify({
-      username: formRef.value.model.user.login,
-      password: formRef.value.model.user.password,
-      // expiresInMins: 60, // optional
-    }),
-  })
-    .then((res) => res.json())
-    .then(console.log);
-}
-
 function handleValidateClick(e) {
   e.preventDefault();
   formRef.value?.validate((errors) => {
