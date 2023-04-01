@@ -4,6 +4,7 @@ import { axiosClient } from "@/_helpers/api";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
+import { useProductStore } from "@/stores/productStore";
 
 import {
   NInput,
@@ -15,10 +16,15 @@ import {
   NModal,
 } from "naive-ui";
 const authStore = useAuthStore();
+const productStore = useProductStore();
+
 const router = useRouter();
 const productData = ref(null);
 const productEditData = ref(null);
 const showModal = ref(false);
+const modalRequestMode = ref({
+  type: "",
+});
 const modalStyle = {
   width: "50%",
   minWidth: "1000px",
@@ -43,15 +49,37 @@ async function getProduct() {
     });
 }
 async function putProduct() {
-  const data = {};
+  console.log("putdata");
+  const data = { ...productEditData.value };
   await axiosClient({
     url: `/products/${router.currentRoute._value.params.id}`,
     method: "PUT",
+    data: data,
   })
     .then((res) => {
       productData.value = { ...res.data };
       productEditData.value = { ...res.data };
       showModal.value = false;
+      window.$message.success("Запрос ушел");
+    })
+    .catch((error) => {
+      window.$message.error(`Апишка у dummyjson тупит ска ${error.message}`);
+    });
+}
+
+async function postProduct() {
+  console.log("putdata");
+  const data = { ...productEditData.value };
+  await axiosClient({
+    url: `/products/add`,
+    method: "POST",
+    data: data,
+  })
+    .then((res) => {
+      console.log(res.data);
+      productStore.productData.unshift(res.data);
+      router.push({ path: "/#/" });
+      window.$message.success("Продукт создан");
     })
     .catch((error) => {
       window.$message.error(error.message);
@@ -64,11 +92,25 @@ async function deleteProduct() {
     method: "DELETE",
   })
     .then((res) => {
-      console.log(res);
+      window.$message.success("Удалено");
+      router.push({ path: "/#/" });
     })
     .catch((error) => {
       window.$message.error(error.message);
     });
+}
+//-------------------------------------------------------------------
+//Logic methods
+
+function openPostModal() {
+  modalRequestMode.value = "POST";
+  productEditData.value = {};
+  showModal.value = true;
+}
+
+function openPutModal() {
+  modalRequestMode.value = "PUT";
+  showModal.value = true;
 }
 
 //-------------------------------------------------------------------
@@ -84,8 +126,11 @@ onMounted(() => {
 <template>
   <div class="product" v-if="productData">
     <n-space v-if="authStore.currentUserAuthData">
-      <n-button type="primary" size="large" @click="showModal = true"
+      <n-button type="primary" size="large" @click="openPutModal"
         >Редактировать продукт</n-button
+      >
+      <n-button type="primary" size="large" @click="openPostModal"
+        >Создать продукт</n-button
       >
       <n-button type="warning" size="large" @click="deleteProduct"
         >Удалить</n-button
@@ -101,6 +146,7 @@ onMounted(() => {
     <p>Описание: {{ productData.description }}</p>
     <p>Цена: {{ productData.price }}</p>
     <p>Бренд: {{ productData.brand }}</p>
+    <p>Бренд: {{ productData.discount }}</p>
   </div>
   <n-modal
     v-model:show="showModal"
@@ -134,7 +180,12 @@ onMounted(() => {
         />
       </n-form-item>
       <n-form-item>
-        <n-button @click="putProduct"> Редактировать </n-button>
+        <n-button @click="putProduct" v-if="modalRequestMode === 'PUT'">
+          Редактировать
+        </n-button>
+        <n-button @click="postProduct" v-if="modalRequestMode === 'POST'">
+          Создать
+        </n-button>
       </n-form-item>
     </n-form>
   </n-modal>
