@@ -32,7 +32,7 @@ const routes = [
     name: "profile",
     path: "/profile",
     component: Profile,
-    meta: { guest: true },
+    meta: { authorize: [] },
   },
 
   { path: "/:pathMatch(.*)*", component: NotFound },
