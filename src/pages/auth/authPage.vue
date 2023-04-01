@@ -95,7 +95,6 @@ function handleValidateClick(e) {
         </n-form-item-row>
       </n-form>
       <n-button
-        :loading="loading"
         icon-placement="left"
         @click="handleValidateClick"
         type="primary"

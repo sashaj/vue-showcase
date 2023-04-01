@@ -19,11 +19,7 @@ export const useAuthStore = defineStore("authStore", {
         data: data,
       })
         .then((user) => {
-          const userObject = {
-            name: user.data.username,
-            token: user.data.token,
-          };
-          console.log(user);
+          const userObject = { ...user.data };
           localStorage.setItem("currentUser", JSON.stringify(userObject));
           this.currentUserAuthData = JSON.stringify(userObject);
           return user;

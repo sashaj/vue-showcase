@@ -8,6 +8,7 @@ import Main from "@/pages/main/mainPage.vue";
 import Auth from "@/pages/auth/authPage.vue";
 import NotFound from "@/pages/404/404Page.vue";
 import Basket from "@/pages/basket/basketPage.vue";
+import Profile from "@/pages/profile/profilePage.vue";
 import ProductItemPage from "@/pages/main/productItemPage.vue";
 
 const routes = [
@@ -25,6 +26,12 @@ const routes = [
     name: "basket",
     path: "/basket",
     component: Basket,
+    meta: { guest: true },
+  },
+  {
+    name: "profile",
+    path: "/profile",
+    component: Profile,
     meta: { guest: true },
   },
 

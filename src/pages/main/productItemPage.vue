@@ -2,7 +2,9 @@
 import { ref } from "vue";
 import { axiosClient } from "@/_helpers/api";
 import { onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
+
 import {
   NInput,
   NInputNumber,
@@ -12,6 +14,7 @@ import {
   NFormItem,
   NModal,
 } from "naive-ui";
+const authStore = useAuthStore();
 const router = useRouter();
 const productData = ref(null);
 const productEditData = ref(null);
@@ -30,30 +33,42 @@ const formRef = {};
 async function getProduct() {
   await axiosClient({
     url: `/products/${router.currentRoute._value.params.id}`,
-  }).then((res) => {
-    productData.value = { ...res.data };
-    productEditData.value = { ...res.data };
-  });
+  })
+    .then((res) => {
+      productData.value = { ...res.data };
+      productEditData.value = { ...res.data };
+    })
+    .catch((error) => {
+      window.$message.error(error.message);
+    });
 }
 async function putProduct() {
   const data = {};
   await axiosClient({
     url: `/products/${router.currentRoute._value.params.id}`,
     method: "PUT",
-  }).then((res) => {
-    productData.value = { ...res.data };
-    productEditData.value = { ...res.data };
-    showModal.value = false;
-  });
+  })
+    .then((res) => {
+      productData.value = { ...res.data };
+      productEditData.value = { ...res.data };
+      showModal.value = false;
+    })
+    .catch((error) => {
+      window.$message.error(error.message);
+    });
 }
 
 async function deleteProduct() {
   await axiosClient({
     url: `/products/${router.currentRoute._value.params.id}`,
     method: "DELETE",
-  }).then((res) => {
-    console.log(res);
-  });
+  })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((error) => {
+      window.$message.error(error.message);
+    });
 }
 
 //-------------------------------------------------------------------
@@ -68,7 +83,7 @@ onMounted(() => {
 
 <template>
   <div class="product" v-if="productData">
-    <n-space>
+    <n-space v-if="authStore.currentUserAuthData">
       <n-button type="primary" size="large" @click="showModal = true"
         >Редактировать продукт</n-button
       >

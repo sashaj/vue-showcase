@@ -5,7 +5,7 @@ import { NIcon, NDropdown, NButton, NBadge, NAvatar } from "naive-ui";
 import {
   LogOutOutline,
   BasketOutline,
-  LogoAppleAppstore,
+  PersonCircleOutline,
 } from "@vicons/ionicons5";
 
 import { useAuthStore } from "@/stores/authStore";
@@ -20,7 +20,15 @@ const renderIcon = (icon) => {
 };
 
 export default defineComponent({
-  components: { NDropdown, NButton, NBadge, NAvatar, NIcon, BasketOutline },
+  components: {
+    NDropdown,
+    NButton,
+    NBadge,
+    NAvatar,
+    NIcon,
+    BasketOutline,
+    PersonCircleOutline,
+  },
   setup() {
     const PROJECT_NAME = import.meta.env.VITE_PROJECT_NAME;
     const router = useRouter();
@@ -38,6 +46,11 @@ export default defineComponent({
       badge,
       options: [
         {
+          label: "Профиль",
+          key: "profile",
+          icon: renderIcon(PersonCircleOutline),
+        },
+        {
           label: "Выйти",
           key: "logout",
           icon: renderIcon(LogOutOutline),
@@ -49,6 +62,9 @@ export default defineComponent({
           authStore.logout();
           authStore.currentUserAuthData = null;
           router.push("/");
+        }
+        if (key === "profile") {
+          router.push("/profile");
         }
       },
     };
@@ -65,7 +81,7 @@ export default defineComponent({
       <div class="px-4" v-if="authStore.currentUserAuthData">
         <n-dropdown :options="options" class="w-48" @select="handleSelect">
           <n-button class="text-white">
-            {{ authStore.currentUserAuthData.name }}
+            {{ authStore.currentUserAuthData.username }}
           </n-button>
         </n-dropdown>
       </div>

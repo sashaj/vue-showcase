@@ -67,20 +67,28 @@ function sort(value) {
 async function getProductsAll() {
   await axiosClient({
     url: "/products",
-  }).then((res) => {
-    for (let i = 0; i < res.data.products.length; i++) {
-      res.data.products[i].quantity = 1;
-    }
-    productData.value = [...res.data.products];
-    virginProductData.value = [...res.data.products];
-  });
+  })
+    .then((res) => {
+      for (let i = 0; i < res.data.products.length; i++) {
+        res.data.products[i].quantity = 1;
+      }
+      productData.value = [...res.data.products];
+      virginProductData.value = [...res.data.products];
+    })
+    .catch((error) => {
+      window.$message.error(error.message);
+    });
 }
 async function getCategoriesAll() {
   await axiosClient({
     url: "/products/categories",
-  }).then((res) => {
-    searchInitValues.value.filter = res.data;
-  });
+  })
+    .then((res) => {
+      searchInitValues.value.filter = res.data;
+    })
+    .catch((error) => {
+      window.$message.error(error.message);
+    });
 }
 
 //-------------------------------------------------------------------
