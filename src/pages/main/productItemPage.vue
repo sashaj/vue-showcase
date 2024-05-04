@@ -146,7 +146,7 @@ onMounted(() => {
     <p>Описание: {{ productData.description }}</p>
     <p>Цена: {{ productData.price }}</p>
     <p>Бренд: {{ productData.brand }}</p>
-    <p>Бренд: {{ productData.discount }}</p>
+    <p v-if="productData.discount">Скидка: {{ productData.discount }}</p>
   </div>
   <n-modal
     v-model:show="showModal"

@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { axiosClient } from "@/_helpers/api";
 import { onMounted } from "vue";
 import { useProductStore } from "@/stores/productStore";
+import productItem from "../../components/productItem.vue";
 import {
   NCard,
   NInput,
@@ -123,7 +124,7 @@ onMounted(() => {
   >
     <n-space>
       <n-grid :y-gap="8" :cols="5">
-        <n-gi v-for="item in searchInitValues.filter">
+        <n-gi v-for="item in searchInitValues.filter" :key="item.id">
           <n-checkbox :value="item">{{ item }}</n-checkbox>
         </n-gi>
       </n-grid>
@@ -151,71 +152,16 @@ onMounted(() => {
       Ничего не найдено. Попробуйте поменять параметры поиска
     </p>
     <div class="product__wrapper">
-      <n-card hoverable v-for="item in productData" class="product__item">
-        <router-link
-          class="pb-10"
-          :to="{ name: 'productItem', params: { id: item.id } }"
-        >
-          <div class="product-list__image">
-            <img
-              :src="item.thumbnail"
-              loading="lazy"
-              width="100"
-              height="100"
-            />
-          </div>
-
-          <div class="flex justify-between">
-            <p>{{ item.title }}</p>
-            <p class="whitespace-nowrap text-blue-600">${{ item.price }}</p>
-          </div>
-          <n-rate size="small" readonly :value="item.rating" allow-half />
-          <p class="text-slate-400">{{ item.description }}</p>
-        </router-link>
-        <n-button
-          @click="productStore.addToBasket(item)"
-          class="product-add-to-basket"
-          >Добавить в корзину
-        </n-button>
-      </n-card>
+      <productItem
+        v-for="item in productData"
+        :item="item"
+        :key="item.id"
+      ></productItem>
     </div>
   </div>
 </template>
 
 <style scoped>
-.product__item {
-  width: 100%;
-  height: 475px;
-  height: 100%;
-}
-
-.product-add-to-basket {
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 80%;
-}
-
-.product-list__image {
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-}
-.product-list__image img {
-  width: 100%;
-  height: 100%;
-  object-fit: scale-down;
-}
-.n-card {
-  max-width: 100%;
-  height: 100%;
-}
-
 .product__wrapper {
   display: grid;
   flex-wrap: wrap;
