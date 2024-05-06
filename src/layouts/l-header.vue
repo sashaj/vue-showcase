@@ -74,7 +74,7 @@ export default defineComponent({
 
 <template>
   <header class="flex justify-center bg-sky-700 h-12">
-    <div class="flex justify-between items-center w-full p-3">
+    <div class="flex justify-between items-center w-full px-10 py-3">
       <router-link :to="{ name: 'main' }">
         <div class="px-4 text-white">Logo/Home</div>
       </router-link>

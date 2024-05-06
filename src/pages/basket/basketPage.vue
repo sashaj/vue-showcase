@@ -123,7 +123,7 @@ function handleBasketCheckout() {
     />
   </n-space>
 
-  <n-form ref="formRef" @keyup.enter="" :model="formModel" :rules="formRules">
+  <n-form ref="formRef" :model="formModel" :rules="formRules">
     <!--Files -->
     <h5>Заполните</h5>
     <n-form-item-row label="ФИО" path="name">

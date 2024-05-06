@@ -14,6 +14,8 @@ import {
   NCheckboxGroup,
   NGi,
   NGrid,
+  NSpin,
+  NAlert,
 } from "naive-ui";
 import { useRouter, useRoute } from "vue-router";
 
@@ -23,6 +25,7 @@ const productData = ref([]);
 const virginProductData = ref(null);
 const searchModel = ref({ filter: null, search: null, sort: null });
 const searchInitValues = ref({ filter: [], sort: ["По рейтингу", "По цене"] });
+const loading = ref(true);
 
 //-------------------------------------------------------------------
 //Logic functions
@@ -62,10 +65,16 @@ function sort(value) {
   }
 }
 
+async function loadingOff() {
+  await Promise.all([getProductsAll(), getCategoriesAll()]);
+  loading.value = false;
+}
+
 //-------------------------------------------------------------------
 //Api methods
 
 async function getProductsAll() {
+  //loading.value = true;
   await axiosClient({
     url: "/products",
   })
@@ -75,17 +84,20 @@ async function getProductsAll() {
       }
       productData.value = [...res.data.products];
       virginProductData.value = [...res.data.products];
+      loading.value = false;
     })
     .catch((error) => {
       window.$message.error(error.message);
     });
 }
 async function getCategoriesAll() {
+  //loading.value = true;
   await axiosClient({
     url: "/products/categories",
   })
     .then((res) => {
       searchInitValues.value.filter = res.data;
+      loading.value = false;
     })
     .catch((error) => {
       window.$message.error(error.message);
@@ -98,67 +110,72 @@ async function getCategoriesAll() {
 onMounted(() => {
   getProductsAll();
   getCategoriesAll();
+  loadingOff();
 });
 //-------------------------------------------------------------------
 </script>
 
 <template v-if="productData">
-  <h5>Поиск</h5>
+  <n-space vertical>
+    <n-spin :show="loading">
+      <h5>Поиск</h5>
+      <div class="flex w-full search mb-10">
+        <n-input
+          v-model:value="searchModel.search"
+          type="text"
+          placeholder="Поиск по названию"
+          size="large"
+          @keyup.enter="search"
+        />
+        <n-button type="primary" size="large" @click="search()">Найти</n-button>
+      </div>
 
-  <div class="flex w-full search mb-10">
-    <n-input
-      v-model:value="searchModel.search"
-      type="text"
-      placeholder="Поиск по названию"
-      size="large"
-      @keyup.enter="search"
-    />
-    <n-button type="primary" size="large" @click="search()">Найти</n-button>
-  </div>
+      <h5>Фильтрация</h5>
+      <n-checkbox-group
+        @update:value="filter"
+        v-model:value="searchModel.filter"
+        class="mb-10"
+      >
+        <n-space>
+          <n-grid :y-gap="8" :cols="5">
+            <n-gi v-for="item in searchInitValues.filter" :key="item.id">
+              <n-checkbox :value="item">{{ item }}</n-checkbox>
+            </n-gi>
+          </n-grid>
+        </n-space>
+      </n-checkbox-group>
 
-  <h5>Фильтрация</h5>
-  <n-checkbox-group
-    @update:value="filter"
-    v-model:value="searchModel.filter"
-    class="mb-10"
-  >
-    <n-space>
-      <n-grid :y-gap="8" :cols="5">
-        <n-gi v-for="item in searchInitValues.filter" :key="item.id">
-          <n-checkbox :value="item">{{ item }}</n-checkbox>
-        </n-gi>
-      </n-grid>
-    </n-space>
-  </n-checkbox-group>
+      <h5>Сортировка</h5>
+      <n-checkbox-group
+        @update:value="sort"
+        v-model:value="searchModel.sort"
+        class="mb-10"
+        :max="1"
+      >
+        <n-space>
+          <n-grid :y-gap="8" :cols="5">
+            <n-gi v-for="item in searchInitValues.sort" :key="item.id">
+              <n-checkbox :value="item">{{ item }}</n-checkbox>
+            </n-gi>
+          </n-grid>
+        </n-space>
+      </n-checkbox-group>
 
-  <h5>Сортировка</h5>
-  <n-checkbox-group
-    @update:value="sort"
-    v-model:value="searchModel.sort"
-    class="mb-10"
-    :max="1"
-  >
-    <n-space>
-      <n-grid :y-gap="8" :cols="5">
-        <n-gi v-for="item in searchInitValues.sort" :key="item.id">
-          <n-checkbox :value="item">{{ item }}</n-checkbox>
-        </n-gi>
-      </n-grid>
-    </n-space>
-  </n-checkbox-group>
-
-  <div class="product">
-    <p v-if="productData.length === 0">
-      Ничего не найдено. Попробуйте поменять параметры поиска
-    </p>
-    <div class="product__wrapper">
-      <productItem
-        v-for="item in productData"
-        :item="item"
-        :key="item.id"
-      ></productItem>
-    </div>
-  </div>
+      <div class="product">
+        <p v-if="productData.length === 0">
+          Ничего не найдено. Попробуйте поменять параметры поиска
+        </p>
+        <div class="product__wrapper">
+          <productItem
+            v-for="item in productData"
+            :item="item"
+            :key="item.id"
+          ></productItem>
+        </div>
+      </div>
+      <template #description> Загрузка... </template>
+    </n-spin>
+  </n-space>
 </template>
 
 <style scoped>
