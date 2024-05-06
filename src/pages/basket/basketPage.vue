@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, h } from "vue";
 import {
   NSpace,
   NButton,
@@ -12,6 +12,7 @@ import {
 import { useRouter } from "vue-router";
 import { useProductStore } from "@/stores/productStore";
 import { useValidateStore } from "@/stores/validateStore";
+import { Close } from "@vicons/ionicons5";
 
 const router = useRouter();
 const productStore = useProductStore();
@@ -41,6 +42,26 @@ const columns = ref([
   {
     title: "Описание",
     key: "description",
+  },
+  {
+    title: "Удалить",
+    key: "actions",
+    render(row) {
+      return h(NButton, {
+        strong: true,
+        tertiary: true,
+        size: "small",
+        color: "#ffffff",
+        quaternary: true,
+        circle: true,
+        onClick: () => deleteRow(row),
+        renderIcon: () => {
+          return h(NIcon, null, {
+            default: () => h(Close),
+          });
+        },
+      });
+    },
   },
 ]);
 
@@ -108,6 +129,10 @@ function handleBasketCheckout() {
   });
 }
 
+function deleteRow(row) {
+  productStore.deleteBasketItem(row);
+}
+
 //-------------------------------------------------------------------
 </script>
 
@@ -148,3 +173,9 @@ function handleBasketCheckout() {
     >
   </n-form>
 </template>
+
+<style>
+.n-button__icon path {
+  color: red;
+}
+</style>

@@ -30,5 +30,13 @@ export const useProductStore = defineStore("ProductStore", {
         this.basketData = JSON.parse(localStorage.getItem("basketData"));
       }
     },
+    deleteBasketItem(product) {
+      this.basketData.labelCount =
+        this.basketData.labelCount - product.quantity;
+      this.basketData.products = this.basketData.products.filter(
+        (item) => item.id !== product.id
+      );
+      this.saveBasketToLocalStorage();
+    },
   },
 });
