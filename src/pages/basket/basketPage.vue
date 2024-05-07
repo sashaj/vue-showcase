@@ -142,6 +142,7 @@ function deleteRow(row) {
   </div>
   <n-space vertical :size="12">
     <n-data-table
+      class="baskettable"
       ref="dataTableRef"
       :columns="columns"
       :data="productStore.basketData.products"
@@ -175,7 +176,7 @@ function deleteRow(row) {
 </template>
 
 <style>
-.n-button__icon path {
+.baskettable .n-button__icon path {
   color: red;
 }
 </style>

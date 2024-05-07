@@ -49,12 +49,12 @@ async function getProduct() {
     });
 }
 async function putProduct() {
-  console.log("putdata");
   const data = { ...productEditData.value };
+  delete data.id;
   await axiosClient({
     url: `/products/${router.currentRoute._value.params.id}`,
     method: "PUT",
-    data: data,
+    data: { data },
   })
     .then((res) => {
       productData.value = { ...res.data };
@@ -68,7 +68,6 @@ async function putProduct() {
 }
 
 async function postProduct() {
-  console.log("putdata");
   const data = { ...productEditData.value };
   await axiosClient({
     url: `/products/add`,
