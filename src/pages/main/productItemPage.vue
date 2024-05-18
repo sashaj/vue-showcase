@@ -113,7 +113,7 @@ onMounted(() => {
     <p>Бренд: {{ productData.brand }}</p>
     <p v-if="productData.discount">Скидка: {{ productData.discount }}</p>
   </div>
-  <Modal>
+  <Modal title="Редактирование продукта">
     <n-form ref="formRef">
       <n-form-item label="Описание">
         <n-input

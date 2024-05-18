@@ -21,6 +21,7 @@ import {
   NInputNumber,
   NForm,
   NFormItem,
+  NUpload,
 } from "naive-ui";
 import { useRouter, useRoute } from "vue-router";
 
@@ -34,6 +35,7 @@ const loading = ref(true);
 const productEditData = ref({});
 const formRef = {};
 const router = useRouter();
+const uploadRef = ref(null);
 
 //-------------------------------------------------------------------
 //Logic functions
@@ -120,9 +122,10 @@ async function postProduct() {
     data: data,
   })
     .then((res) => {
-      productStore.productData.unshift(res.data);
+      data.id = Date.now();
+      productData.value.unshift(data);
       serviceStore.modalOff();
-      router.push({ path: "/#/" });
+      //   router.push({ path: "/#/" });
       window.$message.success("Продукт создан");
     })
     .catch((error) => {
@@ -203,7 +206,7 @@ onMounted(() => {
       </div>
       <template #description> Загрузка... </template>
     </n-spin>
-    <Modal>
+    <Modal title="Создание продукта">
       <n-form ref="formRef">
         <n-form-item label="Описание">
           <n-input
@@ -226,6 +229,7 @@ onMounted(() => {
             placeholder="Скидка"
           />
         </n-form-item>
+        s
         <n-form-item>
           <n-button @click="postProduct"> Создать </n-button>
         </n-form-item>

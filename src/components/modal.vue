@@ -4,13 +4,9 @@ import { NModal, NSpace } from "naive-ui";
 import { useServiceStore } from "@/stores/serviceStore";
 const serviceStore = useServiceStore();
 
-// const props = defineProps({
-//   preset: String,
-//   bordered: Boolean,
-//   size: String,
-//   style: Object,
-//   title: String,
-// });
+const props = defineProps({
+  title: String,
+});
 const modalShow = ref(true);
 const modalStyle = {
   width: "50%",
@@ -28,7 +24,7 @@ const modalStyle = {
     :bordered="false"
     size="huge"
     :style="modalStyle"
-    title="Информация по направлению"
+    :title="title"
   >
     <slot></slot>
   </n-modal>
