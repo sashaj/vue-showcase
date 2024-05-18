@@ -3,7 +3,9 @@ import { ref } from "vue";
 import { axiosClient } from "@/_helpers/api";
 import { onMounted } from "vue";
 import { useProductStore } from "@/stores/productStore";
-import productItem from "../../components/productItem.vue";
+import { useServiceStore } from "@/stores/serviceStore";
+import productItem from "@/components/productItem.vue";
+import Modal from "@/components/modal.vue";
 import {
   NCard,
   NInput,
@@ -16,16 +18,22 @@ import {
   NGrid,
   NSpin,
   NAlert,
+  NInputNumber,
+  NForm,
+  NFormItem,
 } from "naive-ui";
 import { useRouter, useRoute } from "vue-router";
 
+const serviceStore = useServiceStore();
 const productStore = useProductStore();
-
 const productData = ref([]);
 const virginProductData = ref(null);
 const searchModel = ref({ filter: null, search: null, sort: null });
 const searchInitValues = ref({ filter: [], sort: ["По рейтингу", "По цене"] });
 const loading = ref(true);
+const productEditData = ref({});
+const formRef = {};
+const router = useRouter();
 
 //-------------------------------------------------------------------
 //Logic functions
@@ -104,6 +112,24 @@ async function getCategoriesAll() {
     });
 }
 
+async function postProduct() {
+  const data = { ...productEditData.value };
+  await axiosClient({
+    url: `/products/add`,
+    method: "POST",
+    data: data,
+  })
+    .then((res) => {
+      productStore.productData.unshift(res.data);
+      serviceStore.modalOff();
+      router.push({ path: "/#/" });
+      window.$message.success("Продукт создан");
+    })
+    .catch((error) => {
+      window.$message.error(error.message);
+    });
+}
+
 //-------------------------------------------------------------------
 //Lifecycle hooks
 
@@ -118,6 +144,9 @@ onMounted(() => {
 <template v-if="productData">
   <n-space vertical>
     <n-spin :show="loading">
+      <n-button type="primary" size="large" @click="serviceStore.modalOn()"
+        >Создать продукт</n-button
+      >
       <h5>Поиск</h5>
       <div class="flex w-full search mb-10">
         <n-input
@@ -129,7 +158,6 @@ onMounted(() => {
         />
         <n-button type="primary" size="large" @click="search()">Найти</n-button>
       </div>
-
       <h5>Фильтрация</h5>
       <n-checkbox-group
         @update:value="filter"
@@ -175,6 +203,34 @@ onMounted(() => {
       </div>
       <template #description> Загрузка... </template>
     </n-spin>
+    <Modal>
+      <n-form ref="formRef">
+        <n-form-item label="Описание">
+          <n-input
+            v-model:value="productEditData.description"
+            placeholder="Описание"
+          />
+        </n-form-item>
+        <n-form-item label="Цена">
+          <n-input-number
+            v-model:value="productEditData.price"
+            placeholder="Цена"
+          />
+        </n-form-item>
+        <n-form-item label="Бренд">
+          <n-input v-model:value="productEditData.brand" placeholder="Бренд" />
+        </n-form-item>
+        <n-form-item label="Скидка">
+          <n-input-number
+            v-model:value="productEditData.discountPercentage"
+            placeholder="Скидка"
+          />
+        </n-form-item>
+        <n-form-item>
+          <n-button @click="postProduct"> Создать </n-button>
+        </n-form-item>
+      </n-form>
+    </Modal>
   </n-space>
 </template>
 

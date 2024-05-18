@@ -5,7 +5,8 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
 import { useProductStore } from "@/stores/productStore";
-
+import { useServiceStore } from "@/stores/serviceStore";
+import Modal from "@/components/modal.vue";
 import {
   NInput,
   NInputNumber,
@@ -13,11 +14,11 @@ import {
   NSpace,
   NForm,
   NFormItem,
-  NModal,
 } from "naive-ui";
+
+const serviceStore = useServiceStore();
 const authStore = useAuthStore();
 const productStore = useProductStore();
-
 const router = useRouter();
 const productData = ref(null);
 const productEditData = ref(null);
@@ -57,31 +58,13 @@ async function putProduct() {
     data: { data },
   })
     .then((res) => {
-      productData.value = { ...res.data };
+      productData.value = data;
       productEditData.value = { ...res.data };
-      showModal.value = false;
-      window.$message.success("Запрос ушел");
+      serviceStore.modalOff();
+      window.$message.success("Успешно");
     })
     .catch((error) => {
       window.$message.error(`Апишка у dummyjson тупит ска ${error.message}`);
-    });
-}
-
-async function postProduct() {
-  const data = { ...productEditData.value };
-  await axiosClient({
-    url: `/products/add`,
-    method: "POST",
-    data: data,
-  })
-    .then((res) => {
-      console.log(res.data);
-      productStore.productData.unshift(res.data);
-      router.push({ path: "/#/" });
-      window.$message.success("Продукт создан");
-    })
-    .catch((error) => {
-      window.$message.error(error.message);
     });
 }
 
@@ -98,19 +81,6 @@ async function deleteProduct() {
       window.$message.error(error.message);
     });
 }
-//-------------------------------------------------------------------
-//Logic methods
-
-function openPostModal() {
-  modalRequestMode.value = "POST";
-  productEditData.value = {};
-  showModal.value = true;
-}
-
-function openPutModal() {
-  modalRequestMode.value = "PUT";
-  showModal.value = true;
-}
 
 //-------------------------------------------------------------------
 //Lifecycle hooks
@@ -118,19 +88,15 @@ function openPutModal() {
 onMounted(() => {
   getProduct();
 });
-
-//-------------------------------------------------------------------
 </script>
 
 <template>
   <div class="product" v-if="productData">
     <n-space v-if="authStore.currentUserAuthData">
-      <n-button type="primary" size="large" @click="openPutModal"
+      <n-button type="primary" size="large" @click="serviceStore.modalOn()"
         >Редактировать продукт</n-button
       >
-      <n-button type="primary" size="large" @click="openPostModal"
-        >Создать продукт</n-button
-      >
+
       <n-button type="warning" size="large" @click="deleteProduct"
         >Удалить</n-button
       >
@@ -147,15 +113,7 @@ onMounted(() => {
     <p>Бренд: {{ productData.brand }}</p>
     <p v-if="productData.discount">Скидка: {{ productData.discount }}</p>
   </div>
-  <n-modal
-    v-model:show="showModal"
-    class="custom-card"
-    preset="card"
-    :bordered="false"
-    size="huge"
-    :style="modalStyle"
-    title="Информация по направлению"
-  >
+  <Modal>
     <n-form ref="formRef">
       <n-form-item label="Описание">
         <n-input
@@ -179,15 +137,13 @@ onMounted(() => {
         />
       </n-form-item>
       <n-form-item>
-        <n-button @click="putProduct" v-if="modalRequestMode === 'PUT'">
-          Редактировать
-        </n-button>
-        <n-button @click="postProduct" v-if="modalRequestMode === 'POST'">
+        <n-button @click="putProduct"> Редактировать </n-button>
+        <!-- <n-button @click="postProduct" v-if="modalRequestMode === 'POST'">
           Создать
-        </n-button>
+        </n-button> -->
       </n-form-item>
     </n-form>
-  </n-modal>
+  </Modal>
 </template>
 
 <style scoped></style>
