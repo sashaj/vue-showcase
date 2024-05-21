@@ -142,7 +142,7 @@ onMounted(() => {
         class="mb-10"
       >
         <n-space>
-          <n-grid :y-gap="8" :cols="5">
+          <n-grid :y-gap="8" cols="5" class="checkbox-grid">
             <n-gi v-for="item in searchInitValues.filter" :key="item.id">
               <n-checkbox :value="item">{{ item }}</n-checkbox>
             </n-gi>
@@ -158,7 +158,7 @@ onMounted(() => {
         :max="1"
       >
         <n-space>
-          <n-grid :y-gap="8" :cols="5">
+          <n-grid :y-gap="8" :cols="2">
             <n-gi v-for="item in searchInitValues.sort" :key="item.id">
               <n-checkbox :value="item">{{ item }}</n-checkbox>
             </n-gi>
@@ -170,7 +170,7 @@ onMounted(() => {
         <p v-if="productData.length === 0">
           Ничего не найдено. Попробуйте поменять параметры поиска
         </p>
-        <div class="product__wrapper">
+        <div class="product-grid">
           <productItem
             v-for="item in productData"
             :item="item"
@@ -184,7 +184,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.product__wrapper {
+.product-grid {
   display: grid;
   flex-wrap: wrap;
   margin: 0 auto;
@@ -195,5 +195,27 @@ onMounted(() => {
   column-gap: 30px;
   row-gap: 30px;
   justify-content: space-between;
+}
+
+@media screen and (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0px, 1fr));
+  }
+}
+@media screen and (max-width: 800px) {
+  .checkbox-grid {
+    grid-template-columns: repeat(3, minmax(0px, 1fr)) !important;
+  }
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0px, 1fr));
+  }
+}
+@media screen and (max-width: 600px) {
+  .checkbox-grid {
+    grid-template-columns: repeat(2, minmax(0px, 1fr)) !important;
+  }
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0px, 1fr));
+  }
 }
 </style>

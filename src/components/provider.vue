@@ -36,6 +36,7 @@ export default defineComponent({
     class="flex flex-col grow shrink h-full"
     :locale="ruRU"
     :date-locale="dateRuRU"
+    :breakpoints="{ xs: 0, s: 640, m: 1024, l: 1280, xl: 1536, xxl: 1920 }"
   >
     <n-dialog-provider>
       <n-message-provider>

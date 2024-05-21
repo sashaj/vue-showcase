@@ -50,7 +50,7 @@ export default defineComponent({
     <main class="flex h-full grow max-w-screen-2xl mx-auto w-full">
       <n-layout has-sider class="min-h-full">
         <n-layout>
-          <div class="container pl-4 py-10">
+          <div class="container px-4 py-10 mx-auto">
             <RouterView></RouterView>
           </div>
         </n-layout>
