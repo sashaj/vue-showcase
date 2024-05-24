@@ -50,10 +50,11 @@ function search() {
 }
 
 function filter(value) {
+  console.log(value);
   productData.value = [...virginProductData.value];
   if (value.length > 0) {
     productData.value = productData.value.filter((item) => {
-      return item.category === value[0];
+      return item.category === value[0].toLowerCase();
     });
   }
 }
@@ -144,7 +145,7 @@ onMounted(() => {
         <n-space>
           <n-grid :y-gap="8" cols="5" class="checkbox-grid">
             <n-gi v-for="item in searchInitValues.filter" :key="item.id">
-              <n-checkbox :value="item">{{ item }}</n-checkbox>
+              <n-checkbox :value="item.name">{{ item.name }}</n-checkbox>
             </n-gi>
           </n-grid>
         </n-space>
