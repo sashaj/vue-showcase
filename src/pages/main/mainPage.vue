@@ -198,7 +198,7 @@ onMounted(() => {
   justify-content: space-between;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1550px) {
   .product-grid {
     grid-template-columns: repeat(3, minmax(0px, 1fr));
   }

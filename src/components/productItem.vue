@@ -24,7 +24,9 @@ const productStore = useProductStore();
         <p class="whitespace-nowrap text-blue-600">${{ item.price }}</p>
       </div>
       <n-rate size="small" readonly :value="item.rating" allow-half />
-      <p class="text-slate-400">{{ item.description }}</p>
+      <p class="text-slate-400 product-description my-5">
+        {{ item.description }}
+      </p>
     </router-link>
     <n-button
       @click="productStore.addToBasket(item)"
@@ -37,8 +39,24 @@ const productStore = useProductStore();
 <style scoped>
 .product__item {
   width: 100%;
-  height: 475px;
   height: 100%;
+  display: block;
+  padding: 0;
+}
+
+.product-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* number of lines to show */
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+@media screen and (max-width: 1200px) {
+  .product-description {
+    overflow: hidden;
+    display: -webkit-box;
+  }
 }
 
 .product-add-to-basket {
@@ -49,6 +67,12 @@ const productStore = useProductStore();
   margin-left: auto;
   margin-right: auto;
   max-width: 80%;
+}
+
+@media screen and (max-width: 1024px) {
+  .product-add-to-basket {
+    bottom: 10px;
+  }
 }
 
 .product-list__image {
