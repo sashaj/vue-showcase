@@ -54,7 +54,7 @@ function filter(value) {
   productData.value = [...virginProductData.value];
   if (value.length > 0) {
     productData.value = productData.value.filter((item) => {
-      return item.category === value[0].toLowerCase();
+      return value.some((val) => item.category === val.toLowerCase());
     });
   }
 }
