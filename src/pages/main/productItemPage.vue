@@ -146,4 +146,12 @@ onMounted(() => {
   </Modal>
 </template>
 
-<style scoped></style>
+<style scoped>
+.img__wrapper {
+  height: 300px;
+}
+.img__wrapper img {
+  max-height: 100%;
+  max-width: 100%;
+}
+</style>
